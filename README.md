@@ -2,7 +2,7 @@
 ## Script: Local Latency Check
 
 **Description:**
-A simple local latency checking script. Is able to check several websites to calculate latency average.
+A simple local latency checking script. Checks several websites to calculate latency average.
 
 **Customizable:**
 ```powershell
