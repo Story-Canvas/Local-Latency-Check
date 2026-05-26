@@ -1,9 +1,9 @@
 #-------------------------------#
 #	    Created by: SC-Dev     #
 #-------------------------------#
-#---------------------------------------#
-#	  Optional: Adjust websites here   #
-#---------------------------------------#
+#-----------------------------------------#
+#	  Optional: Adjust websites here     #
+#-----------------------------------------#
 
 param([string]$hosts = "bing.com,cnn.com,dropbox.com,github.com,google.com,ibm.com,live.com,meta.com,x.com,youtube.com")
 
