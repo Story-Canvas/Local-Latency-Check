@@ -1,0 +1,39 @@
+#-------------------------------#
+#	    Created by: SC-Dev       #
+#-------------------------------#
+#---------------------------------------#
+#	    Optional: Adjust websites here   #
+#---------------------------------------#
+
+param([string]$hosts = "bing.com,cnn.com,dropbox.com,github.com,google.com,ibm.com,live.com,meta.com,x.com,youtube.com")
+
+#---------------------------------------#
+
+try {
+	$hostsArray = $hosts.Split(",")
+	$parallelTasks = $hostsArray | foreach {
+		(New-Object Net.NetworkInformation.Ping).SendPingAsync($_,750)
+	}
+	[int]$min = 9999999
+	[int]$max = [int]$avg = [int]$success = 0
+	[int]$total = $hostsArray.Count
+	[Threading.Tasks.Task]::WaitAll($parallelTasks)
+	foreach($ping in $parallelTasks.Result) {
+		if ($ping.Status -ne "Success") { continue }
+		$success++
+		[int]$latency = $ping.RoundtripTime
+		$avg += $latency
+		if ($latency -lt $min) { $min = $latency }
+		if ($latency -gt $max) { $max = $latency }
+	}
+	[int]$loss = $total - $success
+	if ($success -ne 0) {
+		cls # Clears output for clean result. Remove if verbatim is needed.
+		$avg /= $success
+		Write-Host "✅ Online with $($avg)ms latency average ($($min)ms...$($max)ms, $loss/$total ping loss)" -ForegroundColor Green
+	} else {
+		Write-Host "⚠️ Offline ($loss/$total ping loss)" -ForegroundColor red
+	}
+} catch {
+	"⚠️ Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
+}
